@@ -9,14 +9,14 @@ public class Pedestrian : MovableObstacle
     NavMeshAgent agent;
     Animator animator;
     [SerializeField] private Transform destination;
-    [SerializeField] private float speed;
-    [SerializeField] private Vector3 dir;
     public override void Trigger()
     {
         Move();
     }
     public void Move()
     {
+        animator = GetComponentInChildren<Animator>();
+        animator.SetTrigger("Move");
         agent = GetComponent<NavMeshAgent>();
         agent.SetDestination(destination.position);
     }

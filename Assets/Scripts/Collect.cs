@@ -40,10 +40,7 @@ public class Collect : MonoBehaviour
     public void FallGifts(int index)
     {
         for (int i = index; i < collectedItems.Count; i++)
-        {
-               
-            Debug.Log(collectedItems[i]);
-            Debug.Log(i + " i");
+        {               
             collectedItems[i].Fall();
         }
         for (int i = index; i < collectedItems.Count; i++)

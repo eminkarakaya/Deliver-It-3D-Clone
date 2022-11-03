@@ -60,7 +60,6 @@ public class Motorcycle : MonoBehaviour
     }
     public void CloseRagdoll(bool ac)
     {
-        Debug.Log(driver.transform.childCount);
         Rigidbody[] rigidbodies = driver.transform.GetComponentsInChildren<Rigidbody>();
         Collider[] colliders = driver.transform.GetComponentsInChildren<Collider>();
 
