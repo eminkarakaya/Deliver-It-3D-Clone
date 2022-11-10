@@ -15,7 +15,8 @@ public class MovableObstacleTrigger : MonoBehaviour
         {
             foreach (var item in moveableObstacle)
             {
-                item.Trigger();
+                if(item != null)
+                    item.Trigger();
             }
         }
     }

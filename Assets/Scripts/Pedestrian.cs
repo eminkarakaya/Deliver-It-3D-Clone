@@ -8,7 +8,6 @@ public class Pedestrian : MovableObstacle
 {
     NavMeshAgent agent;
     Animator animator;
-    [SerializeField] private Transform destination;
     public override void Trigger()
     {
         Move();

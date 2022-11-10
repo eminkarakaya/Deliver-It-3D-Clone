@@ -5,11 +5,16 @@ using UnityEngine.AI;
 
 public class Customer : MonoBehaviour
 {
+    AudioSource audioSource;
     Animator animator;
     public int giftCount;
     [SerializeField] private GameObject happyImage;
     [SerializeField] private GameObject sadImage;
     [SerializeField] private Transform sadPos;
+    private void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
     private void Update()
     {
         if (Vector3.Distance(transform.position, sadPos.position) <= .5f)
@@ -21,11 +26,13 @@ public class Customer : MonoBehaviour
     {
         animator = GetComponentInChildren<Animator>();
         if (other.gameObject.tag == "Player")
+        {
             TakeGift();
+            audioSource.Play();
+        }
     }
     public void TakeGift()
     {
-        Debug.Log(Collect.instance.GetGiftCount() + " " + giftCount);
         if (Collect.instance.GetGiftCount() < giftCount)
         {
             sadImage.SetActive(true);

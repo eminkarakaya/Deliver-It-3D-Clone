@@ -1,0 +1,34 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class OfficeManager : MonoBehaviour , IDataPersistence
+{
+    private int totalMoney;
+    public static OfficeManager instance;
+    [SerializeField] Office[] offices;
+    public Office currentOffice;
+    [SerializeField] private int _currIndex;
+    public int currIndex {
+        get => _currIndex;
+        set
+        {
+            _currIndex = value;
+            currentOffice = offices[_currIndex];
+        }
+    }
+    
+    private void Awake()
+    {
+        instance = this;
+        offices = GetComponentsInChildren<Office>();
+    }
+    public void LoadData(GameData data)
+    {
+        currIndex = data.currentIndex;
+    }
+    public void SaveData(ref GameData data)
+    {
+        data.currentIndex = currIndex;
+    }
+}

@@ -1,22 +1,44 @@
 using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class Collect : MonoBehaviour
 {
+    [SerializeField] AudioClip audioClip;
+    AudioSource audioSource;
+    [SerializeField] float moneyMultiplier;
     public static Collect instance;
     [SerializeField] private Transform collectableItemPlace;
     [SerializeField] private List<Collectable> collectedItems;
     private Transform lastTransform;
+    private float _collectablePlaceRotation = 0;
+    public float collectablePlaceRotation
+    {
+        get => _collectablePlaceRotation;
+        set
+        {
+            _collectablePlaceRotation = value;
+            collectableItemPlace.transform.localRotation = Quaternion.Euler(collectablePlaceRotation * 2, 0, 0);
+        }
+    }
     private void Awake()
     {
         instance = this;
         lastTransform = collectableItemPlace;
     }
+    private void Start()
+    {
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.playOnAwake = false;
+        GiftIdleAnimation();
+    }
     private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.tag == "Gift")
         {
+            audioSource.PlayOneShot(audioClip);
             CollectCollectable(other.gameObject.GetComponent<Collectable>());
         }
     }
@@ -35,7 +57,8 @@ public class Collect : MonoBehaviour
         collectable.tag = "Untagged";
         collectedItems.Add(collectable);
         collectable.GetComponent<Collider>().isTrigger = false;
-        collectable.transform.SetParent(this.transform);
+        collectable.transform.SetParent(collectableItemPlace.transform);
+        collectable.transform.localRotation = Quaternion.Euler(Vector3.zero);
     }
     public void FallGifts(int index)
     {
@@ -102,4 +125,46 @@ public class Collect : MonoBehaviour
             temp++;
         }
     }
+    public int GetCollecteMoney()
+    {
+        return (int) (collectedItems.Count * moneyMultiplier);
+    }
+    public void ConvertMoney()
+    {
+        for (int i = 0; i < collectedItems.Count; i++)
+        {
+            collectedItems[i].ActivateMoney();
+        }
+    }
+    public List<GameObject> CollectedMoneys()
+    {
+        List<GameObject> list = new List<GameObject>();
+        for (int i = 0; i < collectedItems.Count; i++)
+        {
+            GameObject [] moneys = collectedItems[i].GetComponentsInChildren<MeshRenderer>().Select(x=>x.gameObject).ToArray();
+            for (int j = 0; j < moneys.Length; j++)
+            {
+                list.Add(moneys[j]);
+            }
+        }
+        return list;
+    }
+    public void GiftIdleAnimation()
+    {
+        collectableItemPlace.transform.parent.DOShakeRotation(.5f, 2, 3).SetLoops(-1, LoopType.Incremental);
+    }
+    public void GiftForwardAnim(float speed)
+    {
+        var offsetX = (1 / speed)*8;
+        Vector3 offset = new Vector3(offsetX, 0, 0);
+        collectableItemPlace.DORotate(collectableItemPlace.eulerAngles + offset, .1f);
+    }
+    public void GiftBackAnim(float speed)
+    {
+        var offsetX = (1 / speed) * 8;
+        Vector3 offset = new Vector3(-offsetX, 0, 0);
+        collectableItemPlace.DORotate(collectableItemPlace.eulerAngles + offset, .1f);
+    }
+   
+    
 }
