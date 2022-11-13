@@ -5,10 +5,12 @@ using DG.Tweening;
 
 public class MoneyAnimation : MonoBehaviour
 {
-    private Transform targetTransform;
     private void Start()
     {
+        DOTween.Init();
     }
+    private Transform targetTransform;
+   
     public void Trigger()
     {
         targetTransform = OfficeManager.instance.currentOffice.moneyImage.transform;

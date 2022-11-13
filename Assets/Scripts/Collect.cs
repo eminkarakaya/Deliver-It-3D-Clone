@@ -149,8 +149,9 @@ public class Collect : MonoBehaviour
         }
         return list;
     }
-    public void GiftIdleAnimation()
+    public IEnumerator GiftIdleAnimation()
     {
+        yield return new WaitForSeconds(1f);
         collectableItemPlace.transform.parent.DOShakeRotation(.5f, 2, 3).SetLoops(-1, LoopType.Incremental);
     }
     public void GiftForwardAnim(float speed)
@@ -166,5 +167,9 @@ public class Collect : MonoBehaviour
         collectableItemPlace.DORotate(collectableItemPlace.eulerAngles + offset, .1f);
     }
    
-    
+    public void ResetPos()
+    {
+        collectablePlaceRotation = 0;
+        collectedItems.Clear();
+    }
 }

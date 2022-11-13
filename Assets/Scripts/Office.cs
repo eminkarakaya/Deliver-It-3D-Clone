@@ -7,6 +7,7 @@ using TMPro;
 
 public class Office : MonoBehaviour, IDataPersistence
 {
+    public Transform middleOfOffice;
     public Transform cameraPlace;
     [SerializeField] int index;
     public Image moneyImage;
@@ -49,20 +50,18 @@ public class Office : MonoBehaviour, IDataPersistence
         }
     }
     
-    private void Awake()
+    public void LoadData(GameData data)
     {
+        levelMoney = data.officeMoney[index];
         Transform[] canvasChilds = GetComponentsInChildren<Transform>();
         Transform[] transforms = GetComponentsInChildren<Transform>();
         childs = transforms.Select(x => x.gameObject).ToArray();
-                    
-        
+
+
         slider.maxValue = requiredMoneyForLevel;
         slider.value = levelMoney;
-            
+
         requiredMoneyPerItem = requiredMoneyForLevel / childs.Length;
-    }
-    private void Start()
-    {
         foreach (var item in childs)
         {
             if (item.TryGetComponent(out RectTransform rectTransform))
@@ -79,15 +78,8 @@ public class Office : MonoBehaviour, IDataPersistence
             }
         }
     }
-    public void LoadData(GameData data)
+    public void SaveData(GameData data)
     {
-        Debug.Log(data.officeMoney[index] + " load " + index);
-        levelMoney = data.officeMoney[index];
-
-    }
-    public void SaveData(ref GameData data)
-    {
-        Debug.Log(levelMoney + " save " + index);
         data.officeMoney[index] = levelMoney;
     }
 }

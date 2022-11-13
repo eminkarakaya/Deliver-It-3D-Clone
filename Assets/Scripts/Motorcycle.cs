@@ -5,9 +5,10 @@ using PathCreation.Examples;
 [RequireComponent(typeof(Rigidbody))]
 public class Motorcycle : MonoBehaviour
 {
+    [SerializeField] GameObject pressSpaceText;
     [SerializeField] float maxPitch, minPitch;
-    [SerializeField] AudioSource audioSource;
-    [SerializeField] AudioClip accelerationSound, idleSound, crashSound;
+    //[SerializeField] AudioSource audioSource;
+    //[SerializeField] AudioClip accelerationSound, idleSound, crashSound;
     public bool isFinish;
     private PathPlacer pathPlacer;
     private Rigidbody rb;
@@ -34,9 +35,9 @@ public class Motorcycle : MonoBehaviour
     }
     private void Start()
     {
-        audioSource = GetComponent<AudioSource>();
-        audioSource.volume = .5f;
-        _accelClip = SetUpEngineAudioSource(accelerationSound);
+        //audioSource = GetComponent<AudioSource>();
+        //audioSource.volume = .5f;
+        //_accelClip = SetUpEngineAudioSource(accelerationSound);
         driver = GetComponentInChildren<Driver>();
         rb = GetComponent<Rigidbody>();
         rb.isKinematic = true;
@@ -54,16 +55,16 @@ public class Motorcycle : MonoBehaviour
     private void Update()
     {
         Move();
-        var pitch = Mathf.Clamp(_accelClip.pitch, 1, 5);
-        pitch = speed / 4;
-        _accelClip.volume = 1 / (pitch*2);
-        if (pitch < 1)
-            pitch = 1;
-        _accelClip.pitch = pitch;
-        if(isAccident)
-        {
-            _accelClip.volume = 0;
-        }
+        //var pitch = Mathf.Clamp(_accelClip.pitch, 1, 5);
+        //pitch = speed / 4;
+        //_accelClip.volume = 1 / (pitch*2);
+        //if (pitch < 1)
+        //    pitch = 1;
+        //_accelClip.pitch = pitch;
+        //if(isAccident)
+        //{
+        //    _accelClip.volume = 0;
+        //}
         
     }
     private void OnTriggerEnter(Collider other)
@@ -72,7 +73,7 @@ public class Motorcycle : MonoBehaviour
         {
             if (isAccident)
                 return;
-            Accident();
+            Crash();
             StartCoroutine(ResetPos());
         }
     }
@@ -94,9 +95,9 @@ public class Motorcycle : MonoBehaviour
             }
         }
     }
-    private void Accident()
+    private void Crash()
     {
-        audioSource.PlayOneShot(crashSound);
+        //audioSource.PlayOneShot(crashSound);
         CloseRagdoll(true);
         Collect.instance.FallGifts(0);
         //driver.rb.isKinematic = false;
@@ -106,6 +107,7 @@ public class Motorcycle : MonoBehaviour
     }
     private IEnumerator ResetPos()
     {
+        Collect.instance.ResetPos();
         yield return new WaitForSeconds(restartTime);
         //driver.rb.isKinematic = true;
         //GetComponent<Rigidbody>().isKinematic = true;
@@ -139,8 +141,11 @@ public class Motorcycle : MonoBehaviour
             //{
             //    audioSource.Stop();
             //}
+            
             if (Input.GetKey(KeyCode.Space))
             {
+                if (pressSpaceText != null)
+                    Destroy(pressSpaceText);
                 if (speed < maxSpeed)
                 {
                     speed += Time.deltaTime * accelerationSpeed;
@@ -163,7 +168,7 @@ public class Motorcycle : MonoBehaviour
                 if (speed < 0)
                     speed = 0;
             }
-            if (Vector3.Distance(transform.position, path[currIndex + 1].position) < 0.2f)
+            if (Vector3.Distance(transform.position, path[currIndex + 1].position) < 1f)
             {
                 if(currIndex >= path.Count -2)
                 {

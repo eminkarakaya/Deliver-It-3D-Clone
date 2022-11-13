@@ -14,7 +14,7 @@ public class CameraFollow : MonoBehaviour
     }
     private void Start()
     {
-        //followObject = Motorcycle.instance.gameObject;
+        followObject = Motorcycle.instance.transform.GetChild(3).gameObject;
     }
     private void Update()
     {
@@ -29,7 +29,6 @@ public class CameraFollow : MonoBehaviour
     }
     public void Finish(Transform camPlace , Transform lookAt)
     {
-        //transform.DOLookAt(followObject.transform.position,2f);
-        transform.DOMove(camPlace.position, 2f);
+        transform.DOMove(camPlace.position, .5f).OnComplete(()=> transform.DOLookAt(OfficeManager.instance.currentOffice.middleOfOffice.position, .5f));
     }
 }

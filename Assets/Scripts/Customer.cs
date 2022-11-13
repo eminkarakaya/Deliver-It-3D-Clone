@@ -5,19 +5,20 @@ using UnityEngine.AI;
 
 public class Customer : MonoBehaviour
 {
-    AudioSource audioSource;
+    //AudioSource audioSource;
     Animator animator;
     public int giftCount;
     [SerializeField] private GameObject happyImage;
     [SerializeField] private GameObject sadImage;
-    [SerializeField] private Transform sadPos;
+    [SerializeField] private Vector3 sadPos;
     private void Start()
     {
-        audioSource = GetComponent<AudioSource>();
+        sadPos = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z - 10);
+        //audioSource = GetComponent<AudioSource>();
     }
     private void Update()
     {
-        if (Vector3.Distance(transform.position, sadPos.position) <= .5f)
+        if (Vector3.Distance(transform.position, sadPos) <= .5f)
         {
             Destroy(this.gameObject);
         }
@@ -28,7 +29,7 @@ public class Customer : MonoBehaviour
         if (other.gameObject.tag == "Player")
         {
             TakeGift();
-            audioSource.Play();
+            //audioSource.Play();
         }
     }
     public void TakeGift()

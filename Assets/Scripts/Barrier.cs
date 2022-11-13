@@ -5,7 +5,10 @@ using DG.Tweening;
 public class Barrier : MovableObstacle
 {
     [SerializeField] Light red, yellow, green;
-
+    private void Start()
+    {
+        DOTween.Init(null, true);
+    }
     private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.tag == "Player")
@@ -15,8 +18,9 @@ public class Barrier : MovableObstacle
     }
     public override void Trigger()
     {
-        IEnumerator qwe()
+        IEnumerator ChangeLight()
         {
+            this.GetComponent<Collider>().enabled = false;
             yield return new WaitForSeconds(1f);
             red.gameObject.SetActive(false);
             yield return new WaitForSeconds(.25f);
@@ -26,8 +30,8 @@ public class Barrier : MovableObstacle
             yield return new WaitForSeconds(.25f);
             green.gameObject.SetActive(true);
 
-            transform.DORotate(new Vector3(transform.rotation.x, transform.rotation.y, 90), 2f);
+            transform.DOLocalRotate(new Vector3(transform.rotation.x, transform.rotation.y, 90), 2f);
         }
-        StartCoroutine(qwe());
+        StartCoroutine(ChangeLight());
     }
 }

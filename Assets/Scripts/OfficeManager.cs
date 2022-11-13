@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class OfficeManager : MonoBehaviour , IDataPersistence
 {
-    private int totalMoney;
     public static OfficeManager instance;
     [SerializeField] Office[] offices;
     public Office currentOffice;
@@ -23,12 +22,21 @@ public class OfficeManager : MonoBehaviour , IDataPersistence
         instance = this;
         offices = GetComponentsInChildren<Office>();
     }
+    private void OnEnable()
+    {
+        
+    }
+    private void Start()
+    {
+        DataPersistenceManager.instance.LoadGame();
+    }
     public void LoadData(GameData data)
     {
         currIndex = data.currentIndex;
     }
-    public void SaveData(ref GameData data)
+    public void SaveData(GameData data)
     {
         data.currentIndex = currIndex;
     }
+    
 }

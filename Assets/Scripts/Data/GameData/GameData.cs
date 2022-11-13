@@ -11,7 +11,7 @@ public class GameData
     public GameData()
     {
         level = 0;
-        officeMoney = new int[10];
+        officeMoney = new int[12];
         currentIndex = 0;
     }
 }

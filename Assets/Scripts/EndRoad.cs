@@ -1,13 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class EndRoad : MonoBehaviour
 {
-    [SerializeField] GameObject finishCanvas;
+    
     [SerializeField] List<GameObject> moneys;
     [SerializeField] int moneyAnimationIndex;
-    [SerializeField] int earnedMoneyPerFrame;
+    int earnedMoneyPerFrame = 10;
     [SerializeField] private int collectedMoney;
     public List<Transform> officePath;
     [SerializeField] private GameObject officeRoads;
@@ -35,6 +37,7 @@ public class EndRoad : MonoBehaviour
             currOffice.currentMoney += earnedMoneyPerFrame;
             if(collectedMoney == 0)
             {
+              
                 Debug.Log("para býtti");
                 break;
             }
@@ -47,10 +50,13 @@ public class EndRoad : MonoBehaviour
             {
                 if (moneyAnimationIndex == 0)
                 {
-                    finishCanvas.SetActive(true);
+                    LevelManager.instance.finishCanvas.GetComponent<Button>().interactable = true;
+                    LevelManager.instance.finishCanvas.transform.GetChild(0).GetComponent<TextMeshProUGUI>().enabled = true;
+                    LevelManager.instance.finishCanvas.GetComponent<Image>().enabled = true;
+                    LevelManager.instance.NextLevelBtn();
+                    DataPersistenceManager.instance.SaveGame();
                     break;
                 }
-                Debug.Log(moneys[moneyAnimationIndex -1]);
                 moneys[moneyAnimationIndex-1].GetComponent<MoneyAnimation>().Trigger();
                 moneys.Remove(moneys[moneyAnimationIndex-1]);
                 moneyAnimationIndex--;
@@ -61,6 +67,7 @@ public class EndRoad : MonoBehaviour
     public void NextOffice()
     {
         OfficeManager.instance.currIndex++;
+        CameraFollow.instance.Finish(OfficeManager.instance.currentOffice.cameraPlace, OfficeManager.instance.currentOffice.transform);
         StartCoroutine(Motorcycle.instance.Drive(OfficeManager.instance.currIndex, officePath));
     }
 }

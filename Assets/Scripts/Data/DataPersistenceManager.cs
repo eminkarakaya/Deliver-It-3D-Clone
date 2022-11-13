@@ -12,21 +12,13 @@ public class DataPersistenceManager : MonoBehaviour
     public static DataPersistenceManager instance { get; private set; }
 
     private List<IDataPersistence> dataPersistenceObjects;
-    void OnEnable()
+    private void Awake()
     {
         instance = this;
-        
         this.dataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
         this.dataPersistenceObjects = FindAllIDataPersistenceObjects();
-        Debug.Log("load");
-        LoadGame();
-        
     }
-
-    void Start()
-    {
-
-    }
+    
     public void NewGame()
     {
         this.gameData = new GameData();
@@ -36,7 +28,6 @@ public class DataPersistenceManager : MonoBehaviour
         this.gameData = dataHandler.Load();
         if (this.gameData == null)
         {
-            Debug.Log("Data bulunamadý");
             NewGame();
         }
 
@@ -49,14 +40,11 @@ public class DataPersistenceManager : MonoBehaviour
     {
         foreach (IDataPersistence dataPersistanceObject in dataPersistenceObjects)
         {
-            dataPersistanceObject.SaveData(ref gameData);
+            dataPersistanceObject.SaveData(gameData);
         }
         dataHandler.Save(gameData);
     }
-    void OnApplicationQuit()
-    {
-        SaveGame();
-    }
+    
     List<IDataPersistence> FindAllIDataPersistenceObjects()
     {
         IEnumerable<IDataPersistence> dataPersistenceObjects = FindObjectsOfType<MonoBehaviour>().OfType<IDataPersistence>();
