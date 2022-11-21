@@ -9,7 +9,7 @@ public class EndRoad : MonoBehaviour
     
     [SerializeField] List<GameObject> moneys;
     [SerializeField] int moneyAnimationIndex;
-    int earnedMoneyPerFrame = 10;
+    int earnedMoneyPerFrame = 2;
     [SerializeField] private int collectedMoney;
     public List<Transform> officePath;
     [SerializeField] private GameObject officeRoads;
